@@ -1,5 +1,7 @@
 package org.example.springbootassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -38,6 +40,7 @@ public class BankAccount {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id",nullable = false)
+    @JsonBackReference
     private Customer owner;
 
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "bankAccount")

@@ -1,5 +1,6 @@
 package org.example.springbootassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,6 +41,7 @@ public class Customer {
 
     @OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     @Builder.Default
+    @JsonManagedReference
     private List<BankAccount> accounts = new ArrayList<>();
 
     @Column(nullable = false)
