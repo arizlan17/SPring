@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto;
 import org.example.springbootassignment.dto.bankAccountDto.CreateBankAccountDto;
 import org.example.springbootassignment.dto.bankAccountDto.CreatedBankAccountDto;
+import org.example.springbootassignment.dto.depositeDto.DepositDto;
 import org.example.springbootassignment.service.BankAccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class BankAccountController {
         this.bankAccountService = bankAccountService;
     }
 
+
+//    Create Bank Account
     @PostMapping()
     public ResponseEntity<CreatedBankAccountDto> createAccount(@Valid @RequestBody CreateBankAccountDto createBankAccountDto){
         CreatedBankAccountDto bankAccount = bankAccountService.createBankAccount(createBankAccountDto);
@@ -29,15 +32,25 @@ public class BankAccountController {
     }
 
 
-
+//Get Bank Account by Account Number
     @GetMapping("/{accountNumber}")
     public ResponseEntity<CreatedBankAccountDto> getBankAccountByAccountNumber(@PathVariable long accountNumber){
         CreatedBankAccountDto bankAccountDto = bankAccountService.findAccountByAccountNumber(accountNumber);
     return ResponseEntity.ok(bankAccountDto);
     }
 
+//    Get Account by Customer NIC Number
     @GetMapping("/nic/{nic}")
     public List<BankAccountSummaryDto> getAllBankAccounts(@PathVariable String nic){
         return bankAccountService.findAllBankAccount(nic);
     }
+
+
+//    Deposite
+    @PostMapping("{accountNumber}/deposite")
+    public ResponseEntity<CreatedBankAccountDto> deposite(@PathVariable long accountNumber, @Valid @RequestBody DepositDto depositDto){
+        CreatedBankAccountDto updatedBankAccount = bankAccountService.depositMoney(accountNumber, depositDto);
+        return ResponseEntity.ok(updatedBankAccount);
+    }
+
 }

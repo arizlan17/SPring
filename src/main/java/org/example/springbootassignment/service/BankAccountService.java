@@ -3,10 +3,14 @@ package org.example.springbootassignment.service;
 import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto;
 import org.example.springbootassignment.dto.bankAccountDto.CreatedBankAccountDto;
 import org.example.springbootassignment.dto.bankAccountDto.CreateBankAccountDto;
+import org.example.springbootassignment.dto.depositeDto.DepositDto;
+import org.example.springbootassignment.enums.TransactionType;
 import org.example.springbootassignment.model.BankAccount;
 import org.example.springbootassignment.model.Customer;
+import org.example.springbootassignment.model.Transaction;
 import org.example.springbootassignment.repository.BankAccountRepository;
 import org.example.springbootassignment.repository.CustomerRepository;
+import org.example.springbootassignment.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +20,13 @@ import java.util.List;
 public class BankAccountService {
     private final CustomerRepository customerRepository;
     private final BankAccountRepository bankAccountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Autowired
-    public BankAccountService(CustomerRepository customerRepository, BankAccountRepository bankAccountRepository) {
+    public BankAccountService(CustomerRepository customerRepository, BankAccountRepository bankAccountRepository, TransactionRepository transactionRepository) {
         this.customerRepository = customerRepository;
         this.bankAccountRepository = bankAccountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
 
@@ -55,6 +61,35 @@ public class BankAccountService {
         deletedBankAccount.setActive(false);
         bankAccountRepository.save(deletedBankAccount);
     }
+
+    public CreatedBankAccountDto depositMoney(long accountNumber, DepositDto depositDto){
+        if (depositDto.amount() <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be greater than zero");
+        }
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Bank account with account number: " + accountNumber + " not found"));
+
+//        Updaate Amount
+        bankAccount.setAccountBalance(bankAccount.getAccountBalance() + depositDto.amount());
+
+        Transaction transaction = Transaction.builder()
+                .transactionAmount(depositDto.amount())
+                .transactionType(TransactionType.CREDIT)
+                .bankAccount(bankAccount)
+                .description("Deposit of " + depositDto.amount())
+                .build();
+
+
+        bankAccount.getTransactionHistory().add(transaction);
+        transactionRepository.save(transaction);
+
+        BankAccount updatedBankAccount = bankAccountRepository.save(bankAccount);
+        return CreatedBankAccountDto.from(updatedBankAccount);
+    }
+
+
+
+
 
 
 }
