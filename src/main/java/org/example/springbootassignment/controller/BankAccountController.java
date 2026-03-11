@@ -5,6 +5,7 @@ import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto
 import org.example.springbootassignment.dto.bankAccountDto.CreateBankAccountDto;
 import org.example.springbootassignment.dto.bankAccountDto.CreatedBankAccountDto;
 import org.example.springbootassignment.dto.depositeDto.DepositDto;
+import org.example.springbootassignment.dto.withdrawalDto.WithdrawalDto;
 import org.example.springbootassignment.service.BankAccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,4 +54,10 @@ public class BankAccountController {
         return ResponseEntity.ok(updatedBankAccount);
     }
 
+    //    Deposite
+    @PostMapping("{accountNumber}/withdraw")
+    public ResponseEntity<CreatedBankAccountDto> withdraw(@PathVariable long accountNumber, @Valid @RequestBody WithdrawalDto withdrawalDto){
+        CreatedBankAccountDto updatedBankAccount = bankAccountService.withdrawMoney(accountNumber, withdrawalDto);
+        return ResponseEntity.ok(updatedBankAccount);
+    }
 }

@@ -4,6 +4,7 @@ import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto
 import org.example.springbootassignment.dto.bankAccountDto.CreatedBankAccountDto;
 import org.example.springbootassignment.dto.bankAccountDto.CreateBankAccountDto;
 import org.example.springbootassignment.dto.depositeDto.DepositDto;
+import org.example.springbootassignment.dto.withdrawalDto.WithdrawalDto;
 import org.example.springbootassignment.enums.TransactionType;
 import org.example.springbootassignment.model.BankAccount;
 import org.example.springbootassignment.model.Customer;
@@ -88,6 +89,32 @@ public class BankAccountService {
     }
 
 
+    public CreatedBankAccountDto withdrawMoney(long accountNumber, WithdrawalDto withdrawalDto) {
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Bank account with account number: " + accountNumber + " not found"));
+
+        if (withdrawalDto.amount() <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be greater than zero");
+        }
+        if (withdrawalDto.amount() > bankAccount.getAccountBalance()) {
+            throw new IllegalArgumentException("Withdrawal amount exceeds the Account Balance");
+        }
+
+        bankAccount.setAccountBalance(bankAccount.getAccountBalance() - withdrawalDto.amount());
+
+        Transaction transaction = Transaction.builder()
+                .transactionAmount(withdrawalDto.amount())
+                .transactionType(TransactionType.DEBIT)
+                .bankAccount(bankAccount)
+                .description("Withdrawal of " + withdrawalDto.amount())
+                .build();
+
+        bankAccount.getTransactionHistory().add(transaction);
+        transactionRepository.save(transaction);
+
+        BankAccount updatedBankAccount = bankAccountRepository.save(bankAccount);
+        return CreatedBankAccountDto.from(updatedBankAccount);
+    }
 
 
 

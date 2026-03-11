@@ -1,6 +1,7 @@
 package org.example.springbootassignment.controller;
 
 import org.example.springbootassignment.dto.transactionDto.CreateTransactionDto;
+import org.example.springbootassignment.dto.transactionDto.TransactionHistoryRepositoryDto;
 import org.example.springbootassignment.dto.transactionDto.TransactionSummaryDto;
 import org.example.springbootassignment.enums.TransactionType;
 import org.example.springbootassignment.model.Transaction;
