@@ -1,8 +1,8 @@
 package org.example.springbootassignment.service;
 
-import org.example.springbootassignment.dto.BankAccountDto;
-import org.example.springbootassignment.dto.CreatedBankAccountDto;
-import org.example.springbootassignment.dto.CreateBankAccountDto;
+import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto;
+import org.example.springbootassignment.dto.bankAccountDto.CreatedBankAccountDto;
+import org.example.springbootassignment.dto.bankAccountDto.CreateBankAccountDto;
 import org.example.springbootassignment.model.BankAccount;
 import org.example.springbootassignment.model.Customer;
 import org.example.springbootassignment.repository.BankAccountRepository;
@@ -33,21 +33,20 @@ public class BankAccountService {
                 .build();
 
         customer.getAccounts().add(bankAccount);
-        customerRepository.save(customer);
         return CreatedBankAccountDto.from(bankAccountRepository.save(bankAccount));
     }
 
 
-    public BankAccountDto findAccountByAccountNumber(long accountNumber){
+    public CreatedBankAccountDto findAccountByAccountNumber(long accountNumber){
         BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new RuntimeException("Bank account with account number: " + accountNumber + " not found"));
-    return BankAccountDto.from(bankAccount);
+    return CreatedBankAccountDto.from(bankAccount);
     }
 
 
-    public List<BankAccountDto> findAllBankAccount(String  nicNumber){
+    public List<BankAccountSummaryDto> findAllBankAccount(String  nicNumber){
         List<BankAccount> bankAccountList = bankAccountRepository.findAllByOwnerNicNumber(nicNumber);
-        return bankAccountList.stream().map(BankAccountDto::from).toList();
+        return bankAccountList.stream().map(BankAccountSummaryDto::from).toList();
     }
 
     public void deleteAccount (long accountNumber){

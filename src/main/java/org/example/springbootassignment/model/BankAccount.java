@@ -1,9 +1,7 @@
 package org.example.springbootassignment.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +26,7 @@ import java.util.List;
 
 public class BankAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "account_number_seq")
-    private long accountNumber;
+    private Long accountNumber;
 
     @Column(nullable = false)
     private double accountBalance;
@@ -45,7 +42,7 @@ public class BankAccount {
 
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "bankAccount")
     @Builder.Default
-    private List<Transactions> transactionHistory = new ArrayList<>();
+    private List<Transaction> transactionHistory = new ArrayList<>();
 
     @Column(nullable = false)
     @Builder.Default
@@ -66,7 +63,7 @@ public class BankAccount {
         }
 
         this.accountBalance += amount;
-        Transactions transaction = new Transactions( amount, TransactionType.CREDIT);
+        Transaction transaction = new Transaction( amount, TransactionType.CREDIT);
         transactionHistory.add(transaction);
 
         System.out.println("Successfully deposited: " + amount);
@@ -87,7 +84,7 @@ public class BankAccount {
         }
 
         this.accountBalance -= amount;
-        Transactions transaction = new Transactions( amount, TransactionType.DEBIT);
+        Transaction transaction = new Transaction( amount, TransactionType.DEBIT);
         transactionHistory.add(transaction);
 
         System.out.println("Successfully withdrawn: " + amount);
@@ -109,10 +106,10 @@ public class BankAccount {
             System.out.println("-".repeat(100));
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            for (Transactions transaction : transactionHistory) {
+            for (Transaction transaction : transactionHistory) {
                 System.out.println(String.format(
                         "%-15s | %-25s | $%-14.2f | %-10s",
-                        transaction.getTransactionID(),
+                        transaction.getTransactionId(),
                         transaction.getTransactionDate().format(formatter),
                         transaction.getTransactionAmount(),
                         transaction.getTransactionType()
@@ -123,7 +120,14 @@ public class BankAccount {
         System.out.println("Current Account Balance:" + String.format("%.2f", accountBalance));
         System.out.println("-".repeat(100) + "\n");
     }
-
+    @PrePersist
+    protected void onCreate() {
+        // Generate a random 9-digit number if it doesn't already have one
+        if (this.accountNumber == null) {
+            long min = 100000000L; // Smallest 9-digit number
+            long max = 999999999L; // Largest 9-digit number
+            this.accountNumber = min + (long) (Math.random() * (max - min + 1));
+        }}
 
     @Override
     public String toString() {

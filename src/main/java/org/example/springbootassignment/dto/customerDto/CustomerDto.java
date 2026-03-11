@@ -1,6 +1,6 @@
-package org.example.springbootassignment.dto;
+package org.example.springbootassignment.dto.customerDto;
 
-import org.example.springbootassignment.model.BankAccount;
+import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto;
 import org.example.springbootassignment.model.Customer;
 
 import java.util.List;
@@ -12,17 +12,20 @@ public record CustomerDto (
         String emailAddress,
         String phoneNumber,
         boolean isActive,
-        List<BankAccount> accounts
+        List<BankAccountSummaryDto> accounts
 ){
 
-    public  static CustomerDto from(Customer customer){
-        return new  CustomerDto (customer.getCustomerId(),
+    public static CustomerDto from(Customer customer) {
+        return new CustomerDto(
+                customer.getCustomerId(),
                 customer.getNicNumber(),
                 customer.getCustomerName(),
                 customer.getEmailAddress(),
                 customer.getPhoneNumber(),
                 customer.isActive(),
-                customer.getAccounts());
+                customer.getAccounts().stream()
+                        .map(BankAccountSummaryDto::from)
+                        .toList()
+        );
     }
-
-}
+    }

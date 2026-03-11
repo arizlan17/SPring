@@ -1,11 +1,10 @@
-package org.example.springbootassignment.dto;
+package org.example.springbootassignment.dto.bankAccountDto;
 
 import org.example.springbootassignment.enums.AccountType;
 import org.example.springbootassignment.model.BankAccount;
 import org.example.springbootassignment.model.Customer;
-import org.example.springbootassignment.model.Transactions;
+import org.example.springbootassignment.model.Transaction;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record BankAccountDto(
@@ -13,7 +12,7 @@ public record BankAccountDto(
         Customer owner,
         double accountBalance,
         AccountType accountType,
-        List<Transactions> transactionHistory
+        List<Transaction> transactionHistory
 ){
     public static BankAccountDto from(BankAccount bankAccount){
         return new BankAccountDto(

@@ -1,4 +1,4 @@
-package org.example.springbootassignment.dto;
+package org.example.springbootassignment.dto.customerDto;
 
 import jakarta.validation.constraints.NotBlank;
 import org.example.springbootassignment.validatorInterface.ValidNIC;

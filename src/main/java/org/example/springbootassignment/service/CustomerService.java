@@ -1,8 +1,9 @@
 package org.example.springbootassignment.service;
 
-import org.example.springbootassignment.dto.CreateCustomerDto;
-import org.example.springbootassignment.dto.CustomerDto;
-import org.example.springbootassignment.dto.UpdateCustomerDto;
+import org.example.springbootassignment.dto.customerDto.CreateCustomerDto;
+import org.example.springbootassignment.dto.customerDto.CustomerDto;
+import org.example.springbootassignment.dto.customerDto.CustomerSummeryDto;
+import org.example.springbootassignment.dto.customerDto.UpdateCustomerDto;
 import org.example.springbootassignment.model.Customer;
 import org.example.springbootassignment.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ private final CustomerRepository customerRepository;
     }
 
 
-    public List<CustomerDto> findAllCustomer(){
+    public List<CustomerSummeryDto> findAllCustomer(){
         List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(CustomerDto::from).toList();
+        return customers.stream().map(CustomerSummeryDto::from).toList();
     }
 
 

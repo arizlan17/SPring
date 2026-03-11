@@ -1,0 +1,35 @@
+{
+  "transactions": [
+    {
+      "transactionType": "DEBIT",
+      "accountNumber": 1234567890,
+      "transactionAmount": 500.00,
+      "description": "Withdrawal from ATM"
+    },
+    {
+      "transactionType": "CREDIT",
+      "accountNumber": 9876543210,
+      "transactionAmount": 1000.50,
+      "description": "Salary deposit"
+    },
+    {
+      "transactionType": "DEBIT",
+      "accountNumber": 5555555555,
+      "transactionAmount": 250.75,
+      "description": "Online payment"
+    },
+    {
+      "transactionType": "CREDIT",
+      "accountNumber": 1111111111,
+      "transactionAmount": 100.00,
+      "description": "Refund"
+    },
+    {
+      "transactionType": "DEBIT",
+      "accountNumber": 2222222222,
+      "transactionAmount": 50.00,
+      "description": "Bill payment"
+    }
+  ]
+}
+

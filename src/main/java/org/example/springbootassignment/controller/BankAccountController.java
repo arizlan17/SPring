@@ -1,10 +1,9 @@
 package org.example.springbootassignment.controller;
 
 import jakarta.validation.Valid;
-import org.example.springbootassignment.dto.BankAccountDto;
-import org.example.springbootassignment.dto.CreateBankAccountDto;
-import org.example.springbootassignment.dto.CreatedBankAccountDto;
-import org.example.springbootassignment.model.BankAccount;
+import org.example.springbootassignment.dto.bankAccountDto.BankAccountSummaryDto;
+import org.example.springbootassignment.dto.bankAccountDto.CreateBankAccountDto;
+import org.example.springbootassignment.dto.bankAccountDto.CreatedBankAccountDto;
 import org.example.springbootassignment.service.BankAccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +31,13 @@ public class BankAccountController {
 
 
     @GetMapping("/{accountNumber}")
-    public ResponseEntity<BankAccountDto> getBankAccountByAccountNumber(@PathVariable long accountNumber){
-    BankAccountDto bankAccountDto = bankAccountService.findAccountByAccountNumber(accountNumber);
+    public ResponseEntity<CreatedBankAccountDto> getBankAccountByAccountNumber(@PathVariable long accountNumber){
+        CreatedBankAccountDto bankAccountDto = bankAccountService.findAccountByAccountNumber(accountNumber);
     return ResponseEntity.ok(bankAccountDto);
     }
 
     @GetMapping("/nic/{nic}")
-    public List<BankAccountDto> getAllBankAccounts(@PathVariable String nic){
+    public List<BankAccountSummaryDto> getAllBankAccounts(@PathVariable String nic){
         return bankAccountService.findAllBankAccount(nic);
     }
 }
